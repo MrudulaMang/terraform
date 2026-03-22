@@ -1,0 +1,24 @@
+bastian :
+- name :bastian_internet
+  port :22
+  src  :internet 
+  dest :bastian
+- name :bastian_[catalogue,user,shipping,payment,mongdb,redis,rabbitmq]
+  port :8080
+  src  :[catalogue,user,shipping,payment,mongdb,redis,rabbitmq]
+  dest :bastian
+mongodb :
+- name :mongodb_bastian # mongdb accptng conn from bastian
+  port :22
+  src  :bastian
+  dest :mongodb
+- name :mongodb_catalogue # mongodb accepting connection from catalogue
+  port :27017
+  src  :catalogue
+  dest :mongodb
+- name :mongodb_user 
+  port :27017
+  src  :user 
+  dest :mongodb
+
+  

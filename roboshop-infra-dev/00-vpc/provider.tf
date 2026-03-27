@@ -7,7 +7,7 @@ terraform {
   }
 
 backend "s3" {
-  bucket = "terra-state-dev" 
+  bucket = "terra-state-88s-dev" 
   key = "roboshop-dev-vpc" # can give any keyname and extension
   region = "us-east-1"
   encrypt = true

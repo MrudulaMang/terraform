@@ -22,7 +22,7 @@ variable "igw_tags" {
     default = {}
 }
 
-variable "public_subntet_tags" {
+variable "public_subnet_tags" {
     type = map
     default = {}
 }
@@ -66,6 +66,11 @@ variable "nat_tags" {
     type = map
     default = {}
 }
+variable "peering_tags" {
+    type = map
+    default = {}
+}
+
 
 variable "is_peering_required" {
     default = false

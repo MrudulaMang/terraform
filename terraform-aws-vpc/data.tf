@@ -7,8 +7,9 @@ data "aws_vpc" "default" {
 }
 
 data "aws_route_table" "default" {
-    vpc_id = data.aws_vpc.default.id #"Look for a route table inside this specific VPC."
-    filter = {
+    vpc_id = data.aws_vpc.default.id # "Look for a route table inside this specific VPC."
+    filter  {
         name = "association.main"
+        values = ["true"]
     }
 }

@@ -63,5 +63,10 @@ locals {
                 local.common_tags,
                 var.nat_tags    
             )
+    peering_final_tags = merge(
+                local.common_tags,
+                var.peering_tags    
+            )
+        
         
 }

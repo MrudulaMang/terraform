@@ -20,7 +20,7 @@ resource "aws_subnet" "public" {
   
   tags = merge (var.public_subnet_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"public"-local.az_names[count.index]}"
+          Name =  "{$var.project-$var.environment-public-local.az_names[count.index]}"
         }
   )
 }
@@ -34,7 +34,7 @@ resource "aws_subnet" "private" {
   
   tags = merge (var.private_subnet_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"private"-local.az_names[count.index]}"
+          Name =  "{$var.project-$var.environment-private-local.az_names[count.index]}"
         }
   )
 }
@@ -48,7 +48,7 @@ resource "aws_subnet" "database" {
   
   tags = merge (var.database_subnet_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"database"-local.az_names[count.index]}"
+          Name =  "{$var.project-$var.environment-database-local.az_names[count.index]}"
         }
   )
 }
@@ -58,7 +58,7 @@ resource "aws_route_table" "public"{
 
    tags = merge (var.public_route_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"public"}"
+          Name =  "{$var.project-$var.environment-public}"
         }
   )
 
@@ -69,7 +69,7 @@ resource "aws_route_table" "private"{
 
    tags = merge (var.private_route_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"private"}"
+          Name =  "{$var.project-$var.environment-private}"
         }
   )
 }
@@ -79,12 +79,12 @@ resource "aws_route_table" "database"{
 
    tags = merge (var.database_route_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"database"}"
+          Name =  "{$var.project-$var.environment-database}"
         }
   )
 }
 
-resource "aws_route" "public {
+resource "aws_route" "public" {
   route_table_id = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id = aws_internet_gateway.main.id
@@ -95,17 +95,17 @@ resource "aws_eip" "main" {
 
      tags = merge (var.eip_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"eip"}"
+          Name =  "{$var.project-$var.environment-eip}"
         }
      )
 }
 
 resource "aws_nat_gateway" "main" {
-  allocation _id = aws_eip.main.id
+  allocation_id = aws_eip.main.id
   subnet_id = aws_subnet.public[0].id # us-east-1a
    tags = merge (var.nat_final_tags, 
         { 
-          Name =  "{$var.project-$var.environment-"nat"}"
+          Name =  "{$var.project-$var.environment-nat}"
         }
      )
   depends_on = [aws_internet_gateway.main] # writing coz there is no dependecy of igw in the block

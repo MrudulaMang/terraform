@@ -5,7 +5,7 @@
 /*
 module "sg" {
     count = length(var.sg_names)
-    source = "../../terraform_aws_sg"
+    source = "../terraform_aws_sg"
     project = var.project
     environment = var.environment
     sg_name = replace(var.sg_names[count.index],"_","-")

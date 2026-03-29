@@ -83,3 +83,13 @@ resource "aws_security_group_rule" "mysql_bastian" {
   source_security_group_id = local.bastian_sg_id
   security_group_id = local.mysql_sg_id
 }
+
+resource "aws_security_group_rule" "rabbitmq_bastian" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  #where traffic is coming from
+  source_security_group_id = local.bastian_sg_id
+  security_group_id = local.rabbitmq_sg_id
+}

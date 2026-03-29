@@ -43,7 +43,7 @@ provisioner "file"{
 provisioner "remote_exec" { 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh" ,
-            "sudo sh /tmp/bootstrap.sh mongodb"
+            "sudo sh /tmp/bootstrap.sh mongodb var.environment"
         ]
     }
 
@@ -67,7 +67,7 @@ provisioner "remote_exec" {
 */
 
 #connect to mongodb and test the connection
-#-----------REDIS
+#-----------REDIS SESSION 40
 
 
 resource "aws_instance" "redis" {
@@ -108,10 +108,10 @@ resource terraform_data "bootstrap_redis"{
     provisioner "remote_exec" { 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh" ,
-            "sudo sh /tmp/bootstrap.sh redis"
+            "sudo sh /tmp/bootstrap.sh redis var.environment"
         ]
     }
------------------MYSQL
+#-----------------MYSQL SESSION 41
 
 
 resource "aws_instance" "mysql" {
@@ -119,6 +119,7 @@ resource "aws_instance" "mysql" {
     instance_type = "t3.micro"
     subnet_id = local.database_subnet_id
     vpc_security_ids = [local.redis_sg_id]
+    iam_instance_profile = aws_iam_instance_profile.mysql.name
 
   
     tags = merge(
@@ -152,6 +153,50 @@ resource terraform_data "bootstrap_mysql"{
     provisioner "remote_exec" { 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh" ,
-            "sudo sh /tmp/bootstrap.sh mysql"
+            "sudo sh /tmp/bootstrap.sh mysql var.environment"
+        ]
+    }
+
+#---------------------RABBITMQ
+
+resource "aws_instance" "rabbitmq" {
+    name = "${var.project}-${var.environment}-rabbitmq"
+    instance_type = "t3.micro"
+    subnet_id = local.database_subnet_id
+    vpc_security_group_ids = [local.rabbitmq_sg_id]
+
+  
+    tags = merge(
+        {
+            Name ="${var.project}-${var.environment}-rabbitmq" 
+        },
+        local.common_tags
+    )
+}
+
+resource terraform_data "bootstrap_rabbitmq"{
+     triggers_replace = [
+        aws_instance.rabbitmq.id]
+     #triggers when rabbitmq_id changes meaning when new instance is created
+    }
+
+    connection {
+        type = "ssh" 
+        user = "ec2-user"
+        password = "DevOps321"
+        host = aws_instance.rabbitmq.private_ip
+    }
+
+    # timestamp from sessiom TFS =22:26
+    provisioner "file"{
+        source = "bootstrap.sh"        # copy file from here
+        destination = "/tmp/bootstrap.sh" # to rabbitmq instance
+    }
+
+
+    provisioner "remote_exec" { 
+        inline = [ 
+            "chmod +x /tmp/bootstrap.sh" ,
+            "sudo sh /tmp/bootstrap.sh rabbitmq var.environment"
         ]
     }

@@ -8,7 +8,7 @@ terraform {
 } 
 
 backend "s3" {
-  name = "terraform-state-dev"
+  name = "terra-state-88s-dev"
   key = "roboshop-dev-mongodb" 
   region = "us-east-1a"
   encrypt = true

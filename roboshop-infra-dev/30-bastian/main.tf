@@ -1,6 +1,6 @@
 # session 39
 #creating bastian host 
-# creating iam rolele for bastian instance to configure backend and database instances 
+# creating iam role for bastian instance to configure backend and database instances 
 
 resource "aws_instance" "bastian" {
     ami = local.ami_id
@@ -14,7 +14,7 @@ resource "aws_instance" "bastian" {
     root_block_device {
       volume_size = 50
       volume_type = "gp3"
-      tags = merge (
+      tags = merge(
         {
             Name ="${var.project}-${var.environment}-bastian" 
         },

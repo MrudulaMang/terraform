@@ -1,5 +1,5 @@
 
-datasource "aws_ami" "joindevops"{
+data "aws_ami" "joindevops"{
     most_recent = true
     owners = ["973714476881"] #AWS account ID of whoever published the AMI.
 
@@ -20,14 +20,14 @@ datasource "aws_ami" "joindevops"{
 
 }
 
-datasource "aws_ssm_parameter" "vpc_id" {
+data "aws_ssm_parameter" "vpc_id" {
     value = "${var.project}/${var.environment}"
 }
 
-datasource "aws_ssm_parameter" "public_subnet_ids" {
+data "aws_ssm_parameter" "public_subnet_ids" {
     value = "${var.project}/${var.environment}/public_subnet_ids"
 }
 
-datasource "aws_ssm_parameter" "bastian_sg_id" {
+data "aws_ssm_parameter" "bastian_sg_id" {
     value = "${var.project}/${var.environment}/bastian_sg_id"
 }

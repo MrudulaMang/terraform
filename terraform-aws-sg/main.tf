@@ -4,7 +4,7 @@ resource "aws_security_group" "main" {
     vpc_id = "${var.vpc_id}"
     
     egress {
-        from_port = 0 from any # from lowest/any port
+        from_port = 0 # from lowest/any port
         to_port   = 0 # all/any port - ignored when protocol -1
         protocol  = "-1" # all protocols
         cidr_blocks = ["0.0.0.0/0"] #instance can send traffic to ANY IP
@@ -23,14 +23,11 @@ resource "aws_security_group" "main" {
                 5432 → database
     */    
             
-    tags = merge (
+    tags = merge(
         var.sg_tags, #keep it first coz if use give name tag we can replace by the name we gave
         local.common_tags,
         {
             Name = "${var.project}-${var.environment}-${var.sg_name}"
         }
-        
-
-    )
-
+        )
     }

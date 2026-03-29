@@ -22,8 +22,12 @@ resource "aws_security_group_rule" "mongodb_bastian" {
 
 resource "aws_security_group_rule" "mongodb_catalogue" {
   type              = "ingress"
+
+  #Catalogue:random_port → MongoDB:27017
   from_port         = 27017
+  #MongoDB:27017 → Catalogue:49152(random port)
   to_port           = 27017
+  
   protocol          = "tcp"
   #where traffic is coming from
   source_security_group_id = local.catalogue_sg_id

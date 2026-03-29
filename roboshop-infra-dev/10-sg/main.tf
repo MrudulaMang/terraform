@@ -1,4 +1,4 @@
-# session 38 : we retrieving vpc_id from data soruce and
+# session 38 : we retrieving vpc_id from data source and
 # creating security groups for each component(mongodb,catalogue,...) 
 # storing sg_ids in aws_ssm_parameter
 

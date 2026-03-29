@@ -1,5 +1,5 @@
 #session 40
-
+#EC2 instance creation
 resource "aws_instance" "mongodb" {
     name = "${var.project}-${var.environment}-mongodb"
     instance_type = "t3.micro"
@@ -7,41 +7,66 @@ resource "aws_instance" "mongodb" {
     vpc_security_ids = local.database_sg_id
 
   
-tags = merge (
+tags = merge(
         {
             Name ="${var.project}-${var.environment}-mongodb" 
         },
         local.common_tags
     )
 }
+# timestamp 14.40
 
-resource terraform_data "bootstrap"{
+resource terraform_data "bootstrap_mongodb"{
     trigger_replace {
-        aws_instance.mongodb.id #triggers when mongodb_id changes meaning when new instance is created
+        aws_instance.mongodb.id 
+        #triggers when mongodb_id changes meaning when new instance is created
     }
-
-    connection {
+    
+    #instead of hardocding the login details see how u can use secrets
+connection {
         type = "ssh" 
         user = "ec2-user"
         password = "DevOps321"
         host = aws_instance.mongodb.private_ip
     }
 
-    # timestamp from sessiom TFS =22:26
-    provisioner "file"{
+    # timestamp from sessiom TFS =22:26\
+    # copying script file from here to mongo instance
+
+provisioner "file"{
         source = "bootstrap.sh"        # copy file from here
         destination = "/tmp/bootstrap.sh" # to mongodb instance
     }
 
-
-    provisioner "remote_exec" { 
+    #installing anisble and mongodb database in mongo instance by playbook which is in the script bootstrap.sh
+    
+provisioner "remote_exec" { 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh" ,
             "sudo sh /tmp/bootstrap.sh mongodb"
         ]
     }
 }
+/*
+    Remote-exec:
+    Terraform → SSH → 100 machines
+    👉 Issues:
+    - slow apply
+    - partial failures
+    - retries needed
+    - fragile
 
+|Aspect|        remote-exec|user_data|
+|---|---|---|
+|Live logs|      ✅ Yes|    ❌ (unless centralized)can do by cloudwatch|
+|SSH dependency|❌ Required|✅ Not needed|
+|Scaling|       ❌ Poor|    ✅ Excellent|
+|Reliability|   ❌ Fragile| ✅ Better|
+|Cloud-native|  ❌ No|      ✅ Yes|
+
+*/
+
+#connect to mongodb and test the connection
 #-----------REDIS
 
 
@@ -52,7 +77,7 @@ resource "aws_instance" "redis" {
     vpc_security_ids = local.database_sg_id
 
   
-tags = merge (
+    tags = merge(
         {
             Name ="${var.project}-${var.environment}-redis" 
         },
@@ -61,8 +86,9 @@ tags = merge (
 }
 
 resource terraform_data "bootstrap_redis"{
-    trigger_replace {
-        aws_instance.redis.id #triggers when mongodb_id changes meaning when new instance is created
+     triggers_replace = [
+        aws_instance.mongodb.id]
+     #triggers when mongodb_id changes meaning when new instance is created
     }
 
     connection {

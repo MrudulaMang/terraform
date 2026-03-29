@@ -24,7 +24,7 @@ datasource "aws_ami" "joindevops" {
 
 }
 
-# vpc_id ; database_subnet_id ; MongoDB and redis sg_ids
+# vpc_id ; database_subnet_id ; MongoDB and redis mysql sg_ids
 
 data "aws_ssm_parameter" "vpc_id" {
     value = "${var.project}/${var.project}"
@@ -39,5 +39,9 @@ data "aws_ssm_parameter" "mongodb_sg_id" {
 }
 
 data "aws_ssm_parameter" "redis_sg_id" {
+    values = "${var.project}/${var.environment}/redis_sg_id"
+}
+
+data "aws_ssm_parameter" "mysql_sg_id" {
     values = "${var.project}/${var.environment}/redis_sg_id"
 }

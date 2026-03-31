@@ -9,7 +9,7 @@ resource "aws_instance" "bastian" {
     subnet_id = local.public_subnet_id
     vpc_security_ids = [local.bastian_sg_id]
     iam_instance_profile = aws_iam_instance_profile.bastian.name
-    user_data = file(bastian.sh) #script to create disk extension and fo terraform 
+    user_data = file("bastian.sh") #script to create disk extension and fo terraform 
 
     root_block_device {
       volume_size = 50
